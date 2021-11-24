@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<string.h>
+#include<stdlib.h>
 typedef struct{
     char CIN[10];
     char nom[20];
@@ -19,16 +20,12 @@ void ajoute_client(Compte T[])
         scanf("%s",T[i].prenom);
         printf("Montant :");
         scanf("%f",&T[i].montant);
-        /*printf("CIN     : %s \n",T[i].CIN);
-        printf("Nome    : %s \n",T[i].nom);
-        printf("Prenom  : %s \n",T[i].prenom);
-        printf("Montant : %.2f \n",T[i].montant);*/
 }
 /*********************fonction plusieur Ajoute *******************/
 void ajoute_plusieur_client(Compte T[],int nb)
 {
     int i;
-        printf("entrez le nombre de compte bancaire");
+        printf("entrez le nombre de compte bancaire: ");
         scanf("%d",&nb);
         int c=1;
         for(i=num;i<nb+num;i++)
@@ -42,10 +39,6 @@ void ajoute_plusieur_client(Compte T[],int nb)
         scanf("%s",T[i].prenom);
         printf("Montant :");
         scanf("%f",&T[i].montant);
-        /*printf("CIN     : %s \n",T[i].CIN);
-        printf("Nome    : %s \n",T[i].nom);
-        printf("Prenom  : %s \n",T[i].prenom);
-        printf("Montant : %.2f \n",T[i].montant);*/
     }
     num = num + nb;
 }
@@ -53,7 +46,7 @@ void ajoute_plusieur_client(Compte T[],int nb)
  int recherche(Compte T[],int n)
  {
      char temp[20];
-     printf("entrez le numero de CIN");
+     printf("entrez le numero de CIN: ");
      scanf("%s",temp);
      for (int i=0;i<n;i++)
      {
@@ -61,11 +54,11 @@ void ajoute_plusieur_client(Compte T[],int nb)
          c = strcmp(temp,T[i].CIN);
          if (c==0)
          {
-             printf("votre compte existe");
+             printf("votre compte existe\n");
              return i;
          }
      }
-     printf("votre compte n'exsite pas");
+     printf("votre compte n'exsite pas\n");
      return -1;
  }
  /*************** fonction Retrait ********************/
@@ -74,10 +67,16 @@ void ajoute_plusieur_client(Compte T[],int nb)
      float some;
      if (i>=0)
      {
-       printf("entrez la somme");
+       printf("entrez la somme: ");
        scanf("%f",&some);
-       T[i].montant = T[i].montant - some; 
-       printf("le solde apres le retrait est:%.2f",T[i].montant);
+       if (some < T[i].montant)
+       {
+          T[i].montant = T[i].montant - some; 
+          printf("le solde apres le retrait est:%.2f",T[i].montant); 
+       }
+       else 
+         printf("votre solde est insuffisant");
+       
      }
  }
  /******************** fonction Depot *********************/
@@ -86,7 +85,7 @@ void ajoute_plusieur_client(Compte T[],int nb)
      float some;
      if(i>=0)
      {
-         printf("entrez la somme");
+         printf("entrez la somme: ");
          scanf("%f",&some);
          T[i].montant += some;
          printf("le solde apres le depot est:%.2f",T[i].montant);
@@ -136,7 +135,7 @@ void ajoute_plusieur_client(Compte T[],int nb)
     Compte temp[20];
     int i, j = 0;
     float nb ;
-    printf("enter le chiffre pivot: ");
+    printf("enter le chiffre reference: ");
     scanf("%f",&nb);
     for(i=0;i<num;i++)
     {
@@ -167,6 +166,20 @@ void ajoute_plusieur_client(Compte T[],int nb)
       triD(temp,j);
       affichCompte(temp,j);
  }
+/*********************************** Fidélisation*************************/
+void Fidelisation(Compte T[],int n)
+{
+    int i;
+    int c = 1;
+    if(n>3)
+    
+        for(int i=0;i<3;i++)
+    {
+        T[i].montant=(T[i].montant+(1.3*T[i].montant)/100);
+        printf("Copmte N%d qui bénéfice de fide lisation: \n",c);c++;
+        printf("CIN : %s\nNom : %s\nPrenom : %s\nMontant : %.2f\n",T[i].CIN,T[i].nom,T[i].prenom,T[i].montant);
+    }
+}
 /**************** menu principale *********************/
 int main ()
 {
@@ -175,14 +188,16 @@ int main ()
     int f,a=1;
     while(a)
     {
-        puts("                        Menu");
-        puts("====================================================");
+        puts("                     ** Menu **");
+       puts("*****************************************************");
         puts("1) Ajouter un compte");
         puts("2) Ajouter plusieur compte");
         puts("3) Operation");
         puts("4) Affichage");
-        puts("====================================================");
-        printf("entrez votre choix");
+        puts("5) Fidélisation");
+        puts("6) Quitter l application");
+        puts("*****************************************************");
+        printf("entrez votre choix: ");
         scanf("%d",&f);
         int i = 1;
         switch(f)
@@ -196,7 +211,7 @@ int main ()
             case 3:
             puts("1) Retrait");
             puts("2) Depot");
-            printf("entrez votre operation");
+            printf("entrez votre operation: ");
             scanf("%d",&chose);
             switch(chose)
             {
@@ -214,8 +229,8 @@ int main ()
             puts("1)Tri Par Ordre Ascendant");
             puts("2) Tri Par Ordre Descendant");
             puts("3) Par Ordre Ascendant ayant un montant supérieur à un chiffre introduit");
-             puts("4) Par Ordre Descendant ayant un montant supérieur à un chiffre introduit");
-            printf("entrez votre type de tri");
+            puts("4) Par Ordre Descendant ayant un montant supérieur à un chiffre introduit");
+            printf("entrez un numero pour valider votre choix: ");
             scanf("%d",&p);
             switch(p)
             {
@@ -233,10 +248,23 @@ int main ()
                 case 4:
                 RtriD(T);
                 break;
+                case 5:
+                i = recherche(T,n);
+                printf("CIN : %s\nNom : %s\nPrenom : %s\nMontant : %.2f\n",T[i].CIN,T[i].nom,T[i].prenom,T[i].montant);
             }
             break;
+            case 5:
+            triD(T,num);
+            Fidelisation(T,num);
+            break;
+             case 6:
+                exit( EXIT_SUCCESS );
+                break;
+            default:
+                puts("invalid choix");
         }
     }
     return 0;
 }
+
 
